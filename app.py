@@ -13,6 +13,13 @@ SAMPLE_DIR = APP_DIR / "sample_data"
 DB_PATH = DATA_DIR / "zi_dashboard.db"
 DATA_DIR.mkdir(exist_ok=True)
 
+# Deployment: set ADMIN_PASSWORD in Streamlit Secrets.
+# Local development may use the ADMIN_PASSWORD environment variable.
+ADMIN_PASSWORD = st.secrets.get("ADMIN_PASSWORD", os.environ.get("ADMIN_PASSWORD", ""))
+admin_password = ADMIN_PASSWORD
+
+os.makedirs("data", exist_ok=True)
+
 st.set_page_config(
     page_title="Monitoring ZI Kanwil BPN Gorontalo",
     page_icon="📊",
@@ -451,11 +458,11 @@ if page == "Dashboard":
 
     c1, c2, c3, c4 = st.columns(4)
     with c1: kpi_card("Jumlah Satker Diusulkan", n)
-    with c2: kpi_card("Memenuhi Syarat WTAB", f"{memenuhi} / {n}")
+    with c2: kpi_card("Memenuhi Syarat WBK", f"{memenuhi} / {n}")
     with c3: kpi_card("Rata-rata Nilai RB", f"{avg_rb:.2f}")
     with c4: kpi_card("Rata-rata Tindak Lanjut", f"{avg_tl:.1%}")
 
-    st.markdown('<div class="section-title">Status WTAB & Progress Tindak Lanjut</div>',
+    st.markdown('<div class="section-title">Status WBK & Progress Tindak Lanjut</div>',
                 unsafe_allow_html=True)
     left, right = st.columns([1, 2])
     with left:
@@ -534,7 +541,7 @@ if page == "Dashboard":
     else:
         st.success("Seluruh satker memenuhi kriteria status saat ini.")
 
-    st.markdown('<div class="section-title">Kriteria Status Memenuhi Syarat WTAB</div>',
+    st.markdown('<div class="section-title">Kriteria Status Memenuhi Syarat WBK</div>',
                 unsafe_allow_html=True)
     st.dataframe(pd.DataFrame({
         "Kriteria":["Nilai RB","Nilai Pengungkit","Nilai minimal setiap area pengungkit"],
